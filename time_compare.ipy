@@ -1,0 +1,26 @@
+# ipython script to do timings on various cumsum implementations
+from __future__ import print_function
+import numpy as np
+import cy_cumsum
+import c_cumsum
+import np_cumsum
+import py_cumsum
+
+callables = (('pure Python', py_cumsum.cumsum),
+             ('Numpy ufunc', np.cumsum),
+             ('Cython func', cy_cumsum.cumsum),
+             ('Cython func, typed memoryviews', cy_cumsum.cumsum_memview),
+             ('Cython func, C wrapper', c_cumsum.cumsum_c_wrap))
+
+for name, cumsum in callables:
+    lengths = [10000000]
+
+    for length in lengths:
+        work_array = np.arange(length, dtype=np.int64)
+        print(name + ': ', end='')
+        %timeit cumsum(work_array)
+        #print(cumsum(work_array)[-10:])
+
+        #from matplotlib import pyplot as plt
+        #plt.plot(cumsum(work_array))
+        #plt.show()
