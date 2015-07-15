@@ -1,4 +1,4 @@
-# ipython script to do timings on various cumsum implementations
+# ipython script to do timings on various sin implementations
 from __future__ import print_function
 import py_sin
 import numpy as np

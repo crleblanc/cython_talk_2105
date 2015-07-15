@@ -1,4 +1,4 @@
-# wrap a C cumsum implementation written in C
+# wrap a C sin implementation written in C
 import numpy as np
 cimport numpy as np
 cimport cython
