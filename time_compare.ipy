@@ -1,25 +1,35 @@
 # ipython script to do timings on various cumsum implementations
 from __future__ import print_function
 import numpy as np
-import cy_cumsum
-import c_cumsum
-import py_cumsum
+import py_laplace
+import np_laplace
+import cy_laplace
 
-callables = (('pure Python', py_cumsum.cumsum),
-             ('Numpy ufunc', np.cumsum),
-             ('Cython func', cy_cumsum.cumsum),
-             ('Cython func, typed memoryviews', cy_cumsum.cumsum_memview),
-             ('Cython func, C wrapper', c_cumsum.cumsum_c_wrap))
+# TODO: find out why the python version is giving different answers!
 
-for name, cumsum in callables:
-    lengths = [10000000]
+callables = (('pure Python', py_laplace.py_update),
+             ('Numpy', np_laplace.num_update),
+             ('Cython', cy_laplace.cy_update),
+             )
 
-    for length in lengths:
-        work_array = np.arange(length, dtype=np.int64)
-        print(name + ': ', end='')
-        %timeit cumsum(work_array)
-        #print(cumsum(work_array)[-10:])
+dx = 0.1
+dy = 0.1
+dx2 = dx*dx
+dy2 = dy*dy
 
-        #from matplotlib import pyplot as plt
-        #plt.plot(cumsum(work_array))
-        #plt.show()
+for name, laplace_func in callables:
+
+    niter = 100
+    array_shape = 100
+    work_array = np.zeros([array_shape, array_shape], dtype=np.float64)
+    work_array[0] = 1.0
+
+    print('%s (min=%f, max=%f): ' % (name, work_array.min(), work_array.max()), end='')
+    for x in range(niter):
+        laplace_func(work_array, dx2, dy2)
+
+    %timeit laplace_func(work_array, dx2, dy2)
+
+    from matplotlib import pyplot as plt
+    plt.imshow(work_array.astype('f4'))
+    plt.show()
