@@ -7,9 +7,9 @@ import c_wrap_sin
 
 callables = (('pure Python', py_sin.sin),
              ('Numpy ufunc', np.sin),
-             ('Cython func', cy_sin.cython_sin_slow),
-             ('Cython func', cy_sin.cython_sin),
-             ('Cython func, typed memoryviews', cy_sin.cython_sin_memview),
+             ('Cython slow func', cy_sin.cython_sin_slow),
+             ('Cython faster func', cy_sin.cython_sin),
+             ('Cython func, memviews, typed memoryviews', cy_sin.cython_sin_memview),
              ('Cython func, C wrapper', c_wrap_sin.c_wrapper))
 
 for name, func in callables:
