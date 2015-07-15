@@ -7,8 +7,8 @@ try:
 except ImportError:
     USE_CYTHON=False
 
-extensions = [Extension('c_cumsum', ['c_cumsum.pyx', 'cumsum.c']),
-              Extension('cy_cumsum',['cy_cumsum.pyx'])
+extensions = [Extension('c_wrap_sin', ['c_wrap_sin.pyx', 'c_sin.c']),
+              Extension('cy_sin.pyx',['cy_sin.pyx'])
               ]
 
 if USE_CYTHON:

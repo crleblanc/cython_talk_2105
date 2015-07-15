@@ -1,1 +1,0 @@
-void ccumsum(const int64_t *input_array, int64_t *output_array, int64_t nelem);
