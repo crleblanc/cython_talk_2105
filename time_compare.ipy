@@ -5,11 +5,13 @@ import py_laplace
 import np_laplace
 import cy_laplace
 
-# TODO: find out why the python version is giving different answers!
+# TODO: Parallel version works great with big arrays, so plot how each one scales.
 
-callables = (('pure Python', py_laplace.py_update),
+callables = (
+             #('pure Python', py_laplace.py_update),
              ('Numpy', np_laplace.num_update),
              ('Cython', cy_laplace.cy_update),
+             ('Cython parallel', cy_laplace.cy_update_parallel),
              )
 
 dx = 0.1
@@ -19,17 +21,17 @@ dy2 = dy*dy
 
 for name, laplace_func in callables:
 
-    niter = 100
-    array_shape = 100
+    niter = 10
+    array_shape = 20000  # don't make it bigger than 20000, that's a massive array!
     work_array = np.zeros([array_shape, array_shape], dtype=np.float64)
     work_array[0] = 1.0
 
     print('%s (min=%f, max=%f): ' % (name, work_array.min(), work_array.max()), end='')
-    for x in range(niter):
-        laplace_func(work_array, dx2, dy2)
+    #for x in range(niter):
+    #    laplace_func(work_array, dx2, dy2)
 
     %timeit laplace_func(work_array, dx2, dy2)
 
-    from matplotlib import pyplot as plt
-    plt.imshow(work_array.astype('f4'))
-    plt.show()
+    #from matplotlib import pyplot as plt
+    #plt.imshow(work_array.astype('f4'))
+    #plt.show()
