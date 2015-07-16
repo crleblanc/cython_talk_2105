@@ -14,8 +14,7 @@ extensions = [ Extension('cy_laplace',['cy_laplace.pyx'],
                Extension('cy_wrap_claplace',['cy_wrap_claplace.pyx', 'claplace.c'],
                          extra_compile_args=['-fopenmp'],
                          extra_link_args=['-fopenmp']
-                         ),
-               # Extension('c_laplace_wrapper', ['c_laplace_wrapper.pyx', 'c_laplace.c'])
+                         )
               ]
 
 if USE_CYTHON:
