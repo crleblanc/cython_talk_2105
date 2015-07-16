@@ -19,7 +19,7 @@ def cy_update_parallel(np.ndarray[double, ndim=2] u, double dx2, double dy2):
     cdef int i, j
 
     # according to http://cs.anu.edu.au/~Alistair.Rendell/papers/wompei2005.pdf, we should
-    # place a paralle() before this loop.  Hmm, experiment.  Our approach works well with large arrays
+    # place a parallel() before this loop.  Hmm, experiment.  Our approach works well with large arrays
 
     #with nogil, parallel():
     for i in prange(1, u.shape[0]-1, nogil=True):
