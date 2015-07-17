@@ -7,6 +7,7 @@ import py_laplace
 import np_laplace
 import cy_laplace
 import cy_wrap_claplace
+import numba_laplace # requires numba, easiest to use Anaconda distribution
 
 laplace_funcs = (
                  ('pure Python', py_laplace.py_update),
@@ -14,6 +15,8 @@ laplace_funcs = (
                  ('Cython', cy_laplace.cy_update),
                  ('Cython C wrapper', cy_wrap_claplace.cy_update_c_wrap),
                  ('Cython parallel', cy_laplace.cy_update_parallel),
+                 ('Numba laplace loops', numba_laplace.numba_update),
+                 ('Numba laplace vectorized', numba_laplace.numba_update_vectorized),
                  )
 
 dx = 0.1
@@ -28,7 +31,8 @@ def run_all(plot_data=False, maxtime=50):
 
         niter = 10
         # don't make it bigger than 20000, that's a massive array!
-        array_shapes = [10, 20, 50, 100, 200, 500, 1000, 3000, 5000, 10000, 15000, 20000]
+        #array_shapes = [10, 20, 50, 100, 200, 500, 1000, 3000, 5000, 10000, 15000, 20000]
+        array_shapes = [10, 20, 50, 100, 200, 500, 1000, 3000]
 
         time_diff = 0
         times = []

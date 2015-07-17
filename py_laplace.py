@@ -1,5 +1,4 @@
 # 2d Laplace from http://technicaldiscovery.blogspot.co.nz/2011/06/speeding-up-python-numpy-cython-and.html
-from numpy import zeros
 
 def py_update(u, dx2, dy2):
     nx, ny = u.shape
