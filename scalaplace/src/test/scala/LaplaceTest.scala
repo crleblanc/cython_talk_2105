@@ -3,7 +3,17 @@ import org.scalatest.matchers.ShouldMatchers
 
 class LaplaceTest extends FunSuite with Matchers {
 
-  test("simple laplace performance test") {
+  test("single threaded laplace performance test") {
+
+    runTestsOn("single threaded laplace", Laplace.laplace)
+  }
+
+  test("parallel laplace performance test") {
+
+    runTestsOn("parallel laplace", Laplace.parallelLaplace)
+  }
+
+  def runTestsOn(named: String, laplaceFunc: (Array[Array[Double]], Double, Double) => Unit): Unit = {
 
     val (dx, dy) = (0.1, 0.1)
 
@@ -16,7 +26,7 @@ class LaplaceTest extends FunSuite with Matchers {
 
     (1 to 10).foreach { _ =>
       resetArr(arr)
-      Laplace.laplace(arr, dx2, dy2)
+      laplaceFunc(arr, dx2, dy2)
     }
 
     var totalDuration = 0l
@@ -30,8 +40,7 @@ class LaplaceTest extends FunSuite with Matchers {
       totalDuration += System.currentTimeMillis() - start
     }
 
-    print("Avg time per iteration: %2.2f".format(totalDuration / iterations.toDouble))
-
+    print("Avg time per iteration for %s: %2.2f".format(named, totalDuration / iterations.toDouble))
   }
 
   def resetArr(arr: Array[Array[Double]]): Unit = {
