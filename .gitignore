@@ -55,3 +55,14 @@ docs/_build/
 
 # PyBuilder
 target/
+
+
+scalaplace/RUNNING_PID
+scalaplace/logs/
+scalaplace/project/*-shim.sbt
+scalaplace/project/project/
+scalaplace/project/target/
+scalaplace/target/
+scalaplace/tmp/
+scalaplace/.idea/
+
