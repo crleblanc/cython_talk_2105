@@ -16,7 +16,7 @@ laplace_funcs = (('pure Python', py_laplace.py_update),
                  ('Cython C wrapper', cy_wrap_claplace.cy_update_c_wrap),
                  ('Cython parallel', cy_laplace.cy_update_parallel),
                  ('Numba laplace loops', numba_laplace.numba_update),
-                 #('Numba laplace vectorized', numba_laplace.numba_update_vectorized),
+                 # ('Numba laplace vectorized', numba_laplace.numba_update_vectorized),
                 )
 
 dx = 0.1
@@ -44,10 +44,10 @@ def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
                 laplace_func(work_array, dx2, dy2)
             t2 = time.time()
 
-            time_diff = t2-t1
+            time_diff = (t2-t1)/niter
             times.append(time_diff)
             shapes.append(work_array.size)
-            print(name, array_shape, t2-t1)
+            print(name, array_shape, time_diff)
 
             if plot_data:
                 plt.imshow(work_array)
@@ -59,35 +59,40 @@ def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
     return results
 
 
-def plot_results(results, ymax):
-    plt.subplot(2, 1, 1)
-    for name, iter_count, time in results:
-        plt.plot(iter_count, time, '.-', label=name)
-    plt.ylim(0, ymax)
-    plt.legend(loc=2, bbox_to_anchor=(0.05, 1))
+def plot_results(results, xmin, xmax, ymin, ymax):
+    plt.figure(figsize=(25,10))
     plt.title('2D Laplace Python implementation benchmark')
-    plt.xlabel('array size (X*Y)')
-    plt.ylabel('time per iteration (s)')
+    for idx, (name, array_shape, time) in enumerate(results):
+        plt.subplot(1, 2, 1)
+        plt.xlabel('array size (X*Y)')
+        plt.ylabel('time per iteration (s)')
+        plt.xlim(0, xmax)
+        plt.ylim(0, ymax)
+        plt.plot(array_shape, time, '.-', label=name)
+        plt.legend(loc=2, bbox_to_anchor=(0.05, 1))
 
-    plt.subplot(2, 1, 2)
-    for name, iter_count, time in results:
-        plt.loglog(iter_count, time, '.-', label=name)
-    plt.legend(loc=2, bbox_to_anchor=(0.05, 1))
-    plt.xlabel('array size (X*Y)')
-    plt.ylabel('time per iteration (s)')
+        plt.subplot(1, 2, 2)
+        plt.xlim(xmin, xmax)
+        plt.ylim(ymin, ymax)
+        plt.xlabel('array size (X*Y)')
+        plt.ylabel('time per iteration (s)')
+        plt.loglog(array_shape, time, '.-', label=name)
+        plt.legend(loc=2, bbox_to_anchor=(0.05, 1))
+
+        plt.savefig('results-%d.png' % idx)
 
     plt.show()
 
 
 def main():
-    niter=50
+    niter=100
     # don't make it bigger than 20000, that's a massive array!
     #array_shapes = [10, 20, 50, 100, 200, 500, 1000, 3000, 5000, 10000, 15000, 20000]
     array_shapes = [10, 12, 15, 18, 20, 35, 50, 100, 200, 500, 800, 1000, 1500, 2000, 3162]
-    ymax = array_shapes[-1]/260.0
+    ymax = array_shapes[-1]/25000.0
 
     results = run_all(array_shapes, niter=niter, maxtime=ymax, plot_data=False)
-    plot_results(results, ymax)
+    plot_results(results, array_shapes[0]**2, array_shapes[-1]**2, 10e-7, ymax)
 
 if __name__ == '__main__':
     main()
