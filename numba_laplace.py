@@ -11,7 +11,9 @@ def numba_update_vectorized(u, dx2, dy2):
 
 @jit
 def numba_update(u, dx2, dy2):
+    u_tmp = u.copy()
     for i in xrange(1,u.shape[0]-1):
         for j in xrange(1, u.shape[1]-1):
-            u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+            u_tmp[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
                       (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+    u[:] = u_tmp
