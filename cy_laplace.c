@@ -1573,7 +1573,7 @@ static PyObject *__pyx_pf_10cy_laplace_2cy_update_parallel(CYTHON_UNUSED PyObjec
             if (__pyx_t_3 > 0)
             {
                 #ifdef _OPENMP
-                #pragma omp parallel private(__pyx_t_14, __pyx_t_15, __pyx_t_10, __pyx_t_4, __pyx_t_13, __pyx_t_16, __pyx_t_7, __pyx_t_12, __pyx_t_5, __pyx_t_6, __pyx_t_11, __pyx_t_8, __pyx_t_9, __pyx_t_17) private(__pyx_filename, __pyx_lineno, __pyx_clineno) shared(__pyx_parallel_why, __pyx_parallel_exc_type, __pyx_parallel_exc_value, __pyx_parallel_exc_tb)
+                #pragma omp parallel private(__pyx_t_15, __pyx_t_10, __pyx_t_4, __pyx_t_13, __pyx_t_16, __pyx_t_7, __pyx_t_12, __pyx_t_5, __pyx_t_6, __pyx_t_11, __pyx_t_14, __pyx_t_8, __pyx_t_9, __pyx_t_17) private(__pyx_filename, __pyx_lineno, __pyx_clineno) shared(__pyx_parallel_why, __pyx_parallel_exc_type, __pyx_parallel_exc_value, __pyx_parallel_exc_tb)
                 #endif /* _OPENMP */
                 {
                     #ifdef _OPENMP
