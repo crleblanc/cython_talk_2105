@@ -141,9 +141,10 @@ Cython demo counter
 Cython and the GIL
 ------------------
 
-GIL: Global Interpreter Lock
+.. image:: ./long_line.jpg
+    :width: 55%
 
-.. TODO: an image, something running one at a time instead of parallel.  TSA airport security!
+.. info. GIL causes every Python call to run a single thread at a time.  ie: no threads in parallel
 
 Bypassing the GIL with C
 ------------------------
@@ -151,8 +152,10 @@ Bypassing the GIL with C
 Modules that release the GIL:
 
 * time.sleep()
-* NumPy
+* numpy
 * most C extensions
+
+.. These will run in parallel when using threading module
 
 Cython nogil
 ------------
@@ -168,7 +171,7 @@ Benchmarks
 
 .. TODO: add more!
 
-.. image:: ../results-5.png
+.. image:: ../results-4.png
     :width: 100%
 
 
