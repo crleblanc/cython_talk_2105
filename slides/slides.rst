@@ -19,15 +19,17 @@ What is Cython
 
 .. TODO: history of Cython, esp Greg Ewing from Uni of Canterbury!
 
-* Creates a Python C extension from Cython code
-* Can vastly improve performance vs Python
-* Bridge from Python -> C
-* Cython functions callable from C
+* Fork of Pyrex
+* Easy Python C extensions
+* Performance boost
+* Python -> C bridge
+* C->Cython bridge (embedding)
 
-Python vs. C example
---------------------
+Python Demo
+-----------
 
-Python implementation
+.. todo: replace with dire warnings about how complex the C api is compared to Python
+
 from https://docs.python.org/2/c-api/intro.html:
 
 .. code-block:: python
@@ -39,11 +41,8 @@ from https://docs.python.org/2/c-api/intro.html:
             item = 0
         dict[key] = item + 1
 
-.. raw:: pdf
-
-   PageBreak
-
-C equivalent:
+Python C-API Demo
+-----------------
 
 .. code-block:: c
     
@@ -102,8 +101,11 @@ Cython Advantages
 * Garbage collection
 * Easy string handling
 * Automatic reference counting
-* Compliant C code: gcc, MSVC, etc.
+* Automatic type casting (Python->C)
+* Compliant C code
 * Stable, mature
+
+.. TODO: a cython workflow diagram.  Cython-> C -> C extension
 
 Python demo counter
 -------------------
@@ -125,8 +127,8 @@ Cython demo counter
         for i in range(count):
             x += i
 
-Cython demo counter
--------------------
+Cython cdef-ed demo counter
+---------------------------
 
 .. code-block:: cython
 
@@ -166,19 +168,194 @@ Cython nogil
         with nogil:
             do_something()
 
-Benchmarks
+            if something_bad == True:
+                with gil:
+                    raise RuntimeError('sorry...')
+
+Threading headaches:
+--------------------
+
+* race conditions
+* data corruption
+* yikes!  Wait...
+
+Easier multithreading from C?!
+------------------------------
+
+OpenMP: Shared memory multithreading C API/spec
+
+.. image:: Fork_join.svg
+    :width: 80%
+
+source: https://en.wikipedia.org/wiki/OpenMP
+
+Classic Demo Updated
+--------------------
+
+* 2D Laplace Equation benchmark by Prabhu Ramachandran in 2004:
+    http://wiki.scipy.org/PerformancePython
+* Updated in by Travis Oliphant in 2011:
+    http://technicaldiscovery.blogspot.co.nz/2011/06/speeding-up-python-numpy-cython-and.html
+
+.. TODO: an image demonstrating what it's doing, maybe the equation itself (use math:)
+
+.. TODO: introduce *all* implementations, especially cython parallel and numba
+
+Python version
+--------------
+
+* Simple loop based approach
+* Modifies array in-place
+
+.. code-block:: python
+
+    def py_update(u, dx2, dy2):
+        nx, ny = u.shape
+        for i in xrange(1,nx-1):
+            for j in xrange(1, ny-1):
+                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                        (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+
+.. note: mention that previous computations introduce artifacts but discussed by Prahbu, approach zero
+
+Numpy version
+-------------
+
+* Eliminates all loops
+* Extensive use of NumPy vectorized operations
+* Creates several temporary arrays 
+
+.. code-block:: python
+
+    import numpy as np
+
+    def num_update(u, dx2, dy2):
+        u[1:-1,1:-1] = ((u[2:,1:-1] + u[:-2,1:-1])*dy2 +
+                        (u[1:-1,2:] + u[1:-1,:-2])*dx2) / (2*(dx2+dy2))
+
+
+Cython version
+--------------
+
+* Nearly identical to the Python version
+* Cython datatypes
+
+.. code-block:: cython
+
+    import numpy as np
+    cimport numpy as np
+    cimport cython
+
+    def cy_update(np.ndarray[double, ndim=2] u, double dx2, double dy2):
+        cdef int i, j
+        for i in xrange(1,u.shape[0]-1):
+            for j in xrange(1, u.shape[1]-1):
+                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+
+Cython version: setup.py
+------------------------
+
+.. TODO: see if we can make this even simpler:
+
+.. code-block:: python
+
+    from distutils.core import setup
+    from distutils.extension import Extension
+    from Cython.Build import cythonize
+
+    extensions = [Extension('cy_laplace', ['cy_laplace.pyx'])]
+
+    setup(name = 'Demos', ext_modules = cythonize(extensions))
+
+Cython C wrapper
+----------------
+
+Calls a C Laplace implementation
+
+.. code-block:: cython
+
+    import numpy as np
+    cimport numpy as np
+
+    cdef extern from "claplace.h":
+        void c_update(double *u, int x_len, int y_len, double dx2, double dy2)
+
+    def cy_update_c_wrap(np.ndarray[double, ndim=2] u, dx2, dy2):
+        """Wrap a C function that performs the 2D Laplace equation in-place"""
+
+        c_update(<double *> &u[0,0], u.shape[0], u.shape[1], dx2, dy2)
+
+Cython C wrapper: setup.py
+--------------------------
+
+.. code-block:: python
+
+    from distutils.core import setup
+    from distutils.extension import Extension
+    from Cython.Build import cythonize
+
+    extensions = [Extension('cy_wrap_claplace',
+                            ['cy_wrap_claplace.pyx', 'claplace.c'],
+                            extra_compile_args=['-fopenmp'],
+                            extra_link_args=['-fopenmp']
+                            )
+                 ]
+
+    setup(name = 'Demos', ext_modules = cythonize(extensions))
+
+Cython parallel version
+-----------------------
+
+.. code-block:: cython
+
+    # imports omitted
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def cy_update_parallel(np.ndarray[double, ndim=2] u, 
+                           double dx2,
+                           double dy2):
+        cdef int i, j
+        for i in prange(1, u.shape[0]-1, nogil=True):
+            for j in xrange(1, u.shape[1]-1):
+                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+
+Numba version
+-------------
+
+Identical to Python version apart from jit decorator
+
+
+.. code-block:: python
+
+    from numba import jit
+
+    @jit
+    def numba_update(u, dx2, dy2):
+        for i in xrange(1,u.shape[0]-1):
+            for j in xrange(1, u.shape[1]-1):
+                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+
+
+
+
+Conclusions
+-----------
+
+.. TODO: add benchmark images after each implementation above
+
+
+All code available on Github: https://github.com/crleblanc/cython_talk_2105
+
+Questions?
 ----------
 
-.. TODO: add more!
-
-.. image:: ../results-4.png
-    :width: 100%
 
 
-Caveats
--------
 
-* Must re-acquire when using Python objects
 
 .. TODO: show the PyQt demo, one with the GIL released, the other with it locked
 

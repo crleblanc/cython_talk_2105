@@ -60,7 +60,7 @@ def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
 
 
 def plot_results(results, xmin, xmax, ymin, ymax):
-    plt.figure(figsize=(25,10))
+    plt.figure(figsize=(10,5))
     plt.title('2D Laplace Python implementation benchmark')
     for idx, (name, array_shape, time) in enumerate(results):
         plt.subplot(1, 2, 1)
@@ -69,7 +69,7 @@ def plot_results(results, xmin, xmax, ymin, ymax):
         plt.xlim(0, xmax)
         plt.ylim(0, ymax)
         plt.plot(array_shape, time, '.-', label=name)
-        plt.legend(loc=2, bbox_to_anchor=(0.05, 1))
+        plt.legend(loc=2, bbox_to_anchor=(0.05, 1), framealpha=0.0)
 
         plt.subplot(1, 2, 2)
         plt.xlim(xmin, xmax)
@@ -77,9 +77,10 @@ def plot_results(results, xmin, xmax, ymin, ymax):
         plt.xlabel('array size (X*Y)')
         plt.ylabel('time per iteration (s)')
         plt.loglog(array_shape, time, '.-', label=name)
-        plt.legend(loc=2, bbox_to_anchor=(0.05, 1))
+        #plt.legend(loc=2, bbox_to_anchor=(0.05, 1), framealpha=0.0)
 
-        plt.savefig('results-%d.png' % idx)
+        plt.savefig('slides/results-%d.png' % idx, transparent=True)
+        plt.savefig('slides/results-%d.svg' % idx, transparent=True)
 
     plt.show()
 
