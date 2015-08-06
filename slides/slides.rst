@@ -1,18 +1,20 @@
-Cython Intro: get the benefits of C without leaving Python.
-###########################################################
-
 .. Create a pdf of these slides with the command: rst2pdf -e inkscape -b1 -s slides.style slides.rst
 .. Create an S5 html slide output with the command: rst2s5 slides.rst -d slides.html
-.. TODO: get a nice image for the cover page, some svg for all backgrounds
+
+.. image:: slide_cover.svg
+    :width: 85%
 
 Myself
 ------
 
 * Background in Earth Sciences, Geophysics
 * Using Python since 2001
-* Software developer for GNS Science
+* Software developer for GLOBE Claritas, GNS Science
 
-.. TODO: background on Claritas.  Me: OBSs and seismics in Canada before coming to NZ to work on Claritas.
+.. Me: OBSs and seismics in Canada before coming to NZ to work on Claritas.
+
+.. image:: heatflow_small.jpg
+    :width: 40%
 
 What is Cython
 --------------
@@ -62,12 +64,15 @@ Python C-API Demo
             if (!PyErr_ExceptionMatches(PyExc_KeyError))
                 goto error;
 
+.. code-block:: c
+
             /* Clear the error and use zero: */
             PyErr_Clear();
             item = PyInt_FromLong(0L);
             if (item == NULL)
                 goto error;
         }
+
         const_one = PyInt_FromLong(1L);
         if (const_one == NULL)
             goto error;
@@ -95,14 +100,16 @@ Python C-API Demo
 Cython Advantages
 -----------------
 
+.. ? Maybe avoid all these bullet points, just mention them...  Maybe table of Advantages/disadvantages
+
 * 99% Python
 * Python 2/3 compatibility
 * Classes
 * Garbage collection
-* Easy string handling
+* String handling
 * Automatic reference counting
-* Automatic type casting (Python->C)
-* Compliant C code
+* Automatic type casting (Python->C, C->Python)
+* Portable C code produced
 * Stable, mature
 
 .. TODO: a cython workflow diagram.  Cython-> C -> C extension
@@ -176,11 +183,13 @@ Threading headaches:
 --------------------
 
 * race conditions
+* deadlocks
 * data corruption
-* yikes!  Wait...
+* thread pools
+* Yikes!  Wait...
 
-Easier multithreading from C?!
-------------------------------
+Easier multithreading... from C?!
+---------------------------------
 
 OpenMP: Shared memory multithreading C API/spec
 
@@ -196,10 +205,18 @@ Classic Demo Updated
     http://wiki.scipy.org/PerformancePython
 * Updated in by Travis Oliphant in 2011:
     http://technicaldiscovery.blogspot.co.nz/2011/06/speeding-up-python-numpy-cython-and.html
+* Previously compared:
+    Psyco, NumPy, Blitz, Inline, Python/Fortran, Pyrex, MatLab, Octave, Pure C++
+* We'll add: Numba, Cython in parallel
 
-.. TODO: an image demonstrating what it's doing, maybe the equation itself (use math:)
+2D Laplace equation
+-------------------
 
-.. TODO: introduce *all* implementations, especially cython parallel and numba
+* floating point intensive
+* iterative
+
+.. image:: laplace_matrix.svg
+    :width: 30%
 
 Python version
 --------------
@@ -214,9 +231,15 @@ Python version
         for i in xrange(1,nx-1):
             for j in xrange(1, ny-1):
                 u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
-                        (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
 
 .. note: mention that previous computations introduce artifacts but discussed by Prahbu, approach zero
+
+Python benchmark
+----------------
+
+.. image:: results-0.svg
+    :width: 80%
 
 Numpy version
 -------------
@@ -232,6 +255,35 @@ Numpy version
     def num_update(u, dx2, dy2):
         u[1:-1,1:-1] = ((u[2:,1:-1] + u[:-2,1:-1])*dy2 +
                         (u[1:-1,2:] + u[1:-1,:-2])*dx2) / (2*(dx2+dy2))
+
+Numpy Benchmark
+---------------
+
+.. image:: results-1.svg
+    :width: 80%
+
+Numba version
+-------------
+
+* Identical to Python version apart from jit decorator
+
+
+.. code-block:: python
+
+    from numba import jit
+
+    @jit
+    def numba_update(u, dx2, dy2):
+        for i in xrange(1,u.shape[0]-1):
+            for j in xrange(1, u.shape[1]-1):
+                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+
+Numba benchmark
+---------------
+
+.. image:: results-2.svg
+    :width: 80%
 
 
 Cython version
@@ -268,10 +320,16 @@ Cython version: setup.py
 
     setup(name = 'Demos', ext_modules = cythonize(extensions))
 
+Cython benchmark
+----------------
+
+.. image:: results-3.svg
+    :width: 80%
+
 Cython C wrapper
 ----------------
 
-Calls a C Laplace implementation
+* Calls a C Laplace implementation
 
 .. code-block:: cython
 
@@ -279,12 +337,29 @@ Calls a C Laplace implementation
     cimport numpy as np
 
     cdef extern from "claplace.h":
-        void c_update(double *u, int x_len, int y_len, double dx2, double dy2)
+        void c_update(double *u, int x_len, int y_len,
+                      double dx2, double dy2)
 
     def cy_update_c_wrap(np.ndarray[double, ndim=2] u, dx2, dy2):
-        """Wrap a C function that performs the 2D Laplace equation in-place"""
-
         c_update(<double *> &u[0,0], u.shape[0], u.shape[1], dx2, dy2)
+
+C implementation
+----------------
+
+C code in a Python talk?!
+
+.. code-block:: c
+
+    void c_update(double *u, int nx, int ny, double dx2, double dy2) {
+        int i, j, elem;
+        for (i=1; i<ny-1; i++) {
+            for (j=1; j<nx-1; j++) {
+                elem = i*nx + j;
+                u[elem] = ((u[elem+nx] + u[elem-nx]) * dy2 +
+                           (u[elem+1] + u[elem-1]) * dx2) / (2*(dx2+dy2));
+            }
+        }
+    }
 
 Cython C wrapper: setup.py
 --------------------------
@@ -297,12 +372,18 @@ Cython C wrapper: setup.py
 
     extensions = [Extension('cy_wrap_claplace',
                             ['cy_wrap_claplace.pyx', 'claplace.c'],
-                            extra_compile_args=['-fopenmp'],
-                            extra_link_args=['-fopenmp']
+                            #extra_compile_args=['-fopenmp'],
+                            #extra_link_args=['-fopenmp']
                             )
                  ]
 
     setup(name = 'Demos', ext_modules = cythonize(extensions))
+
+Cython C wrapper benchmark
+--------------------------
+
+.. image:: results-4.svg
+    :width: 80%
 
 Cython parallel version
 -----------------------
@@ -322,44 +403,44 @@ Cython parallel version
                 u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
                           (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
 
-Numba version
--------------
+Cython parallel benchmark
+-------------------------
 
-Identical to Python version apart from jit decorator
+.. image:: results-5.svg
+    :width: 80%
 
+Need more performance?
+----------------------
 
-.. code-block:: python
+* PyCuda/PyOpenCl
+* NumbaPro
+* OpenACC
 
-    from numba import jit
-
-    @jit
-    def numba_update(u, dx2, dy2):
-        for i in xrange(1,u.shape[0]-1):
-            for j in xrange(1, u.shape[1]-1):
-                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
-                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
-
-
-
+.. OpenACC is virtually identical to OpenMP, could open up the GPU without writing GPU kernels
 
 Conclusions
 -----------
 
-.. TODO: add benchmark images after each implementation above
+Arbitrary scores:
 
++--------------+--------+-------+--------+---------+-------+
+|              | Python | NumPy | Cython | Cython  | Numba |
+|              |        |       |        | parallel|       |
++==============+========+=======+========+=========+=======+
+| Simplicity   | `***`  | `****`| `**`   | `**`    | `***` |
++--------------+--------+-------+--------+---------+-------+
+| Performance  |        | `***` | `****` | `*****` | `****`|
++--------------+--------+-------+--------+---------+-------+
+| Distribution | `*****`| `****`| `**`   | `**`    | `*`   |
++--------------+--------+-------+--------+---------+-------+
 
-All code available on Github: https://github.com/crleblanc/cython_talk_2105
-
-Questions?
+Thanks!
 ----------
 
+https://github.com/crleblanc/cython_talk_2105
 
-
-
-
-.. TODO: show the PyQt demo, one with the GIL released, the other with it locked
-
-
+Questions?
+==========
 
 .. footer::
 

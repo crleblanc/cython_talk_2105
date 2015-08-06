@@ -10,12 +10,12 @@ import cy_laplace
 import cy_wrap_claplace
 import numba_laplace # requires numba, easiest to use Anaconda distribution
 
-laplace_funcs = (('pure Python', py_laplace.py_update),
-                 ('Numpy', np_laplace.num_update),
+laplace_funcs = (('Pure Python', py_laplace.py_update),
+                 ('NumPy', np_laplace.num_update),
+                 ('Numba', numba_laplace.numba_update),
                  ('Cython', cy_laplace.cy_update),
                  ('Cython C wrapper', cy_wrap_claplace.cy_update_c_wrap),
                  ('Cython parallel', cy_laplace.cy_update_parallel),
-                 ('Numba laplace loops', numba_laplace.numba_update),
                  # ('Numba laplace vectorized', numba_laplace.numba_update_vectorized),
                 )
 
