@@ -2,7 +2,10 @@
 # python script to do timings on various 2D laplace implementations
 from __future__ import print_function
 import time
+import argparse
 import numpy as np
+import json
+import matplotlib
 from matplotlib import pyplot as plt
 import py_laplace
 import np_laplace
@@ -10,7 +13,7 @@ import cy_laplace
 import cy_wrap_claplace
 import numba_laplace # requires numba, easiest to use Anaconda distribution
 
-laplace_funcs = (('Pure Python', py_laplace.py_update),
+laplace_funcs = (('Pure Python      ', py_laplace.py_update),
                  ('NumPy', np_laplace.num_update),
                  ('Numba', numba_laplace.numba_update),
                  ('Cython', cy_laplace.cy_update),
@@ -23,6 +26,15 @@ dx = 0.1
 dy = 0.1
 dx2 = dx*dx
 dy2 = dy*dy
+
+def getargs():
+    parser = argparse.ArgumentParser(description='Time and/or plot the timings of the Laplace benchmarks')
+    parser.add_argument('-t', '--timing', dest='timing', action='store_true',
+                    help='Run the timing operation')
+    parser.add_argument('-p', '--plot', dest='plot', action='store_true',
+                    help='Plot the data from results.json obtained from an earlier run, see --timing')
+
+    return parser.parse_args()
 
 
 def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
@@ -40,7 +52,7 @@ def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
             work_array[0] = 1.0
 
             t1 = time.time()
-            for x in range(niter):
+            for x in xrange(niter):
                 laplace_func(work_array, dx2, dy2)
             t2 = time.time()
 
@@ -53,34 +65,43 @@ def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
                 plt.imshow(work_array)
                 plt.show()
 
-        results.append((name, shapes, times))
+        results.append({'name':name, 'array_shapes':shapes, 'times':times})
         print(name, shapes, times)
 
     return results
 
 
 def plot_results(results, xmin, xmax, ymin, ymax):
-    plt.figure(figsize=(10,5))
+    matplotlib.rcParams.update({'font.size': 18})
+    plt.figure(figsize=(11,5), tight_layout=True)
     plt.title('2D Laplace Python implementation benchmark')
-    for idx, (name, array_shape, time) in enumerate(results):
+    for idx, result in enumerate(results):
+        name = result['name']
+        array_shapes = result['array_shapes']
+        times = result['times']
+
         plt.subplot(1, 2, 1)
         plt.xlabel('array size (X*Y)')
         plt.ylabel('time per iteration (s)')
         plt.xlim(0, xmax)
         plt.ylim(0, ymax)
-        plt.plot(array_shape, time, '.-', label=name)
-        plt.legend(loc=2, bbox_to_anchor=(0.05, 1), framealpha=0.0)
+        plt.plot(array_shapes, times, '.-', linewidth=2.0, label=name)
+        #plt.legend(loc=2, bbox_to_anchor=(0.05, 1), framealpha=0.0)
 
         plt.subplot(1, 2, 2)
         plt.xlim(xmin, xmax)
         plt.ylim(ymin, ymax)
         plt.xlabel('array size (X*Y)')
         plt.ylabel('time per iteration (s)')
-        plt.loglog(array_shape, time, '.-', label=name)
+        plt.loglog(array_shapes, times, '.-', linewidth=2.0, label=name)
         #plt.legend(loc=2, bbox_to_anchor=(0.05, 1), framealpha=0.0)
+        legend = plt.legend(loc='upper right', bbox_to_anchor=(2.0, 1.0), framealpha=0.0)
 
-        plt.savefig('slides/results-%d.png' % idx, transparent=True)
-        plt.savefig('slides/results-%d.svg' % idx, transparent=True)
+        #plt.savefig('slides/results-%d.png' % idx, transparent=True)
+        plt.savefig('slides/results-%d.svg' % idx,
+                    bbox_extra_artists=(legend,),
+                    bbox_inches='tight',
+                    transparent=True)
 
     plt.show()
 
@@ -92,8 +113,22 @@ def main():
     array_shapes = [10, 12, 15, 18, 20, 35, 50, 100, 200, 500, 800, 1000, 1500, 2000, 3162]
     ymax = array_shapes[-1]/25000.0
 
-    results = run_all(array_shapes, niter=niter, maxtime=ymax, plot_data=False)
-    plot_results(results, array_shapes[0]**2, array_shapes[-1]**2, 10e-7, ymax)
+    results = None
+    args = getargs()
+
+    if args.timing:
+        results = run_all(array_shapes, niter=niter, maxtime=ymax, plot_data=False)
+        
+        with open('results.json', 'w') as fp:
+            json.dump(results, fp)
+
+    if args.plot:
+        if results is None:
+            with open('results.json', 'r') as fp:
+                results = json.load(fp)
+
+        plot_results(results, array_shapes[0]**2, array_shapes[-1]**2, 10e-7, ymax)
+
 
 if __name__ == '__main__':
     main()

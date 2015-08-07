@@ -13,9 +13,6 @@ Myself
 
 .. Me: OBSs and seismics in Canada before coming to NZ to work on Claritas.
 
-.. image:: heatflow_small.jpg
-    :width: 40%
-
 What is Cython
 --------------
 
@@ -25,12 +22,10 @@ What is Cython
 * Easy Python C extensions
 * Performance boost
 * Python -> C bridge
-* C->Cython bridge (embedding)
+* C -> Cython bridge
 
 Python Demo
 -----------
-
-.. todo: replace with dire warnings about how complex the C api is compared to Python
 
 from https://docs.python.org/2/c-api/intro.html:
 
@@ -112,7 +107,12 @@ Cython Advantages
 * Portable C code produced
 * Stable, mature
 
-.. TODO: a cython workflow diagram.  Cython-> C -> C extension
+Cython Disadvantages
+--------------------
+
+* Needs compilation
+* Distutils
+* CPython specific
 
 Python demo counter
 -------------------
@@ -121,7 +121,7 @@ Python demo counter
 
     def counter(count):
         x = 0
-        for i in range(count):
+        for i in xrange(count):  # range in Py3
             x += i
 
 Cython demo counter
@@ -131,7 +131,7 @@ Cython demo counter
 
     def counter(count):
         cdef int x = 0 # <- a C style data type
-        for i in range(count):
+        for i in xrange(count):
             x += i
 
 Cython cdef-ed demo counter
@@ -141,17 +141,23 @@ Cython cdef-ed demo counter
 
     cdef int counter(int count):
         cdef int x = 0
-        for i in range(count):
+        for i in xrange(count):
             x += i
         return x
 
-.. TODO: cdeff-ed functions, cdeffed input args, numpy arrays (ok, later)
+Building a Cython module
+------------------------
+
+* Cython translates from .pyx to C code
+    cython inputfile.pyx
+* Or let setup.py handle it
+    python setup.py build_ext --inplace
 
 Cython and the GIL
 ------------------
 
 .. image:: ./long_line.jpg
-    :width: 55%
+    :width: 50%
 
 .. info. GIL causes every Python call to run a single thread at a time.  ie: no threads in parallel
 
@@ -161,8 +167,8 @@ Bypassing the GIL with C
 Modules that release the GIL:
 
 * time.sleep()
-* numpy
-* most C extensions
+* most of NumPy
+* many C extensions
 
 .. These will run in parallel when using threading module
 
@@ -207,7 +213,8 @@ Classic Demo Updated
     http://technicaldiscovery.blogspot.co.nz/2011/06/speeding-up-python-numpy-cython-and.html
 * Previously compared:
     Psyco, NumPy, Blitz, Inline, Python/Fortran, Pyrex, MatLab, Octave, Pure C++
-* We'll add: Numba, Cython in parallel
+* We'll disucss:
+    Python, NumPy, Numba, Cython, Cython wrapping C, Cython in parallel
 
 2D Laplace equation
 -------------------
@@ -218,11 +225,38 @@ Classic Demo Updated
 .. image:: laplace_matrix.svg
     :width: 30%
 
-Python version
+Starting state
 --------------
 
-* Simple loop based approach
-* Modifies array in-place
+.. image:: output_array_0.png
+    :width: 40%
+
+10 iterations
+-------------
+
+.. image:: output_array_1.png
+    :width: 40%
+
+100 iterations
+--------------
+
+.. image:: output_array_2.png
+    :width: 40%
+
+1000 iterations
+---------------
+
+.. image:: output_array_3.png
+    :width: 40%
+
+10000 iterations
+----------------
+
+.. image:: output_array_4.png
+    :width: 40%
+
+Python version
+--------------
 
 .. code-block:: python
 
@@ -233,13 +267,19 @@ Python version
                 u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
                           (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
 
+    work_array = np.zeros([array_shape, array_shape], dtype=np.float64)
+    work_array[0] = 1.0
+
+    for x in range(100):
+        py_update(work_array, dx2, dy2)
+
 .. note: mention that previous computations introduce artifacts but discussed by Prahbu, approach zero
 
 Python benchmark
 ----------------
 
 .. image:: results-0.svg
-    :width: 80%
+    :width: 100%
 
 Numpy version
 -------------
@@ -260,13 +300,12 @@ Numpy Benchmark
 ---------------
 
 .. image:: results-1.svg
-    :width: 80%
+    :width: 100%
 
 Numba version
 -------------
 
 * Identical to Python version apart from jit decorator
-
 
 .. code-block:: python
 
@@ -283,14 +322,13 @@ Numba benchmark
 ---------------
 
 .. image:: results-2.svg
-    :width: 80%
+    :width: 100%
 
 
 Cython version
 --------------
 
-* Nearly identical to the Python version
-* Cython datatypes
+* Similar to the Python and Numba versions
 
 .. code-block:: cython
 
@@ -298,6 +336,8 @@ Cython version
     cimport numpy as np
     cimport cython
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     def cy_update(np.ndarray[double, ndim=2] u, double dx2, double dy2):
         cdef int i, j
         for i in xrange(1,u.shape[0]-1):
@@ -307,8 +347,6 @@ Cython version
 
 Cython version: setup.py
 ------------------------
-
-.. TODO: see if we can make this even simpler:
 
 .. code-block:: python
 
@@ -320,11 +358,14 @@ Cython version: setup.py
 
     setup(name = 'Demos', ext_modules = cythonize(extensions))
 
+Build module with a single command:
+    python setup.py build_ext --inplace
+
 Cython benchmark
 ----------------
 
 .. image:: results-3.svg
-    :width: 80%
+    :width: 100%
 
 Cython C wrapper
 ----------------
@@ -383,14 +424,12 @@ Cython C wrapper benchmark
 --------------------------
 
 .. image:: results-4.svg
-    :width: 80%
+    :width: 100%
 
 Cython parallel version
 -----------------------
 
 .. code-block:: cython
-
-    # imports omitted
 
     @cython.boundscheck(False)
     @cython.wraparound(False)
@@ -407,7 +446,7 @@ Cython parallel benchmark
 -------------------------
 
 .. image:: results-5.svg
-    :width: 80%
+    :width: 100%
 
 Need more performance?
 ----------------------
@@ -421,7 +460,12 @@ Need more performance?
 Conclusions
 -----------
 
+* Cython make C extensions easy
+* Excellent performance, especially in parallel
+* Numba also impressive, but no prange
+
 Arbitrary scores:
+=================
 
 +--------------+--------+-------+--------+---------+-------+
 |              | Python | NumPy | Cython | Cython  | Numba |
