@@ -370,7 +370,7 @@ Cython benchmark
 Cython C wrapper
 ----------------
 
-* Calls a C Laplace implementation
+* Calls a C Laplace implementation.  Similar to Ctypes or CFFI.
 
 .. code-block:: cython
 
@@ -426,6 +426,23 @@ Cython C wrapper benchmark
 .. image:: results-4.svg
     :width: 100%
 
+Cython parallelism
+------------------
+
+Cython.parallel
+===============
+
+* parallel directive: thread-local buffers
+* prange: an OpenMP parallel version of xrange/range
+
+openmp module
+=============
+* low level C API wrappers, eg:
+
+.. code-block:: cython
+
+    num_threads = openmp.omp_get_num_threads()
+
 Cython parallel version
 -----------------------
 
@@ -453,9 +470,11 @@ Need more performance?
 
 * PyCuda/PyOpenCl
 * NumbaPro
-* OpenACC
+* OpenMP 4, OpenACC
+* Distributed parallelism: mpi4py, ipython parallel, Spark, etc
 
-.. OpenACC is virtually identical to OpenMP, could open up the GPU without writing GPU kernels
+.. OpenACC is similar to OpenMP, could open up the GPU without writing GPU kernels
+.. OpenMP 4 will support GPUs, an easy upgrade
 
 Conclusions
 -----------
@@ -468,8 +487,8 @@ Arbitrary scores:
 =================
 
 +--------------+--------+-------+--------+---------+-------+
-|              | Python | NumPy | Cython | Cython  | Numba |
-|              |        |       |        | parallel|       |
+|              | Pure   | NumPy | Cython | Cython  | Numba |
+|              | Python |       |        | parallel|       |
 +==============+========+=======+========+=========+=======+
 | Simplicity   | `***`  | `****`| `**`   | `**`    | `***` |
 +--------------+--------+-------+--------+---------+-------+
@@ -481,6 +500,8 @@ Arbitrary scores:
 Thanks!
 ----------
 
+http://cython.org
+http://numba.pydata.org/
 https://github.com/crleblanc/cython_talk_2105
 
 Questions?

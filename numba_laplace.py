@@ -15,3 +15,8 @@ def numba_update(u, dx2, dy2):
         for j in xrange(1, u.shape[1]-1):
             u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
                       (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+
+@jit
+def numba_run(work_array, dx2, dy2, niter):
+    for x in xrange(niter):
+        numba_update(work_array, dx2, dy2)

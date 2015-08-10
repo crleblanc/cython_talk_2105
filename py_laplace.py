@@ -6,3 +6,7 @@ def py_update(u, dx2, dy2):
         for j in xrange(1, ny-1):
             u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
                       (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+
+def py_run(work_array, dx2, dy2, niter):
+    for x in xrange(niter):
+        py_update(work_array, dx2, dy2)
