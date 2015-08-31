@@ -10,11 +10,11 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="566.92914"
-   height="318.89764"
+   width="16cm"
+   height="12cm"
    id="svg7304"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.91 r"
    sodipodi:docname="slide_cover.svg">
   <defs
      id="defs7306">
@@ -248,15 +248,15 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-733.46324)">
+     transform="translate(0,-627.16403)">
     <g
        id="g7787"
-       transform="matrix(0.37416814,0,0,0.37416814,1.9613505,744.30557)">
+       transform="matrix(0.37416814,0,0,0.37416814,4.8184934,647.16271)">
       <path
          style="opacity:0.44382019;fill:url(#radialGradient1480);fill-opacity:1;fill-rule:nonzero;stroke:none"
          id="path1894"
          transform="matrix(0.73406,0,0,0.809524,58.972752,63.796144)"
-         d="m 110.46717,132.28575 a 48.948285,8.6066794 0 1 1 -97.896571,0 48.948285,8.6066794 0 1 1 97.896571,0 z"
+         d="m 110.46717,132.28575 a 48.948285,8.6066802 0 1 1 -97.896571,0 48.948285,8.6066802 0 1 1 97.896571,0 z"
          inkscape:connector-curvature="0" />
       <g
          id="g3206"
@@ -304,14 +304,14 @@
       <path
          style="fill:#646464;fill-opacity:1"
          id="path2196"
-         d="M 107.59375,0 C 74.969981,0 48.572931,9.593118 28.500001,28.6875 9.501691,46.686855 0,68.782099 0,95.0625 c 0,27.95719 8.76385,51.23143 26.343751,69.8125 19.38518,20.80534 46.2467,31.25 80.718749,31.25 34.77298,0 62.02099,-10.44466 81.75,-31.25 5.28096,-5.47462 9.77236,-11.3677 13.5,-17.65625 l -40.1875,0 c -10.40946,19.29518 -28.49867,29.02426 -54.28125,29.1875 -23.038689,0.30796 -40.324359,-8.80579 -51.843749,-27.25 -9.02632,-14.47476 -13.5,-32.50135 -13.5,-54.09375 0,-47.085733 21.49392,-71.671499 64.562499,-73.65625 23.29663,0.855493 40.53553,9.111781 51.625,24.750001 2.11114,2.904448 3.95875,5.998052 5.59375,9.25 l 42.78125,0 C 202.36242,45.663815 195.74812,36.768402 187.21875,28.6875 166.75895,9.593117 140.21761,0 107.59375,0 z"
+         d="M 107.59375,0 C 74.969981,0 48.572931,9.593118 28.500001,28.6875 9.501691,46.686855 0,68.782099 0,95.0625 c 0,27.95719 8.76385,51.23143 26.343751,69.8125 19.38518,20.80534 46.2467,31.25 80.718749,31.25 34.77298,0 62.02099,-10.44466 81.75,-31.25 5.28096,-5.47462 9.77236,-11.3677 13.5,-17.65625 l -40.1875,0 c -10.40946,19.29518 -28.49867,29.02426 -54.28125,29.1875 -23.038689,0.30796 -40.324359,-8.80579 -51.843749,-27.25 -9.02632,-14.47476 -13.5,-32.50135 -13.5,-54.09375 0,-47.085733 21.49392,-71.671499 64.562499,-73.65625 23.29663,0.855493 40.53553,9.111781 51.625,24.750001 2.11114,2.904448 3.95875,5.998052 5.59375,9.25 l 42.78125,0 C 202.36242,45.663815 195.74812,36.768402 187.21875,28.6875 166.75895,9.593117 140.21761,0 107.59375,0 Z"
          inkscape:connector-curvature="0" />
     </g>
     <flowRoot
        xml:space="preserve"
        id="flowRoot7800"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       transform="matrix(0.87430321,0,0,0.87430321,-77.819621,811.03256)"><flowRegion
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:'Bitstream Vera Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.87430321,0,0,0.87430321,-74.962478,818.17542)"><flowRegion
          id="flowRegion7802"><rect
            id="rect7804"
            width="294.96454"
@@ -323,19 +323,19 @@
          id="flowPara7808"
          style="font-size:27.45043182px">GNS Science</flowPara></flowRoot>    <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="196.06093"
-       y="772.72705"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:'Bitstream Vera Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="198.91808"
+       y="675.58417"
        id="text7837"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="196.06093"
-         y="772.72705"
+         x="198.91808"
+         y="675.58417"
          id="tspan7841"
          style="font-size:32px">Get the benefits of C</tspan><tspan
          sodipodi:role="line"
-         x="196.06093"
-         y="812.72705"
+         x="198.91808"
+         y="715.58417"
          id="tspan7845"
          style="font-size:32px">without leaving Python</tspan></text>
   </g>

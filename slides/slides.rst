@@ -59,14 +59,14 @@ Python C-API Demo
             if (!PyErr_ExceptionMatches(PyExc_KeyError))
                 goto error;
 
-.. code-block:: c
-
             /* Clear the error and use zero: */
             PyErr_Clear();
             item = PyInt_FromLong(0L);
             if (item == NULL)
                 goto error;
         }
+
+.. code-block:: c
 
         const_one = PyInt_FromLong(1L);
         if (const_one == NULL)
@@ -157,7 +157,7 @@ Cython and the GIL
 ------------------
 
 .. image:: ./long_line.jpg
-    :width: 50%
+    :width: 75%
 
 .. info. GIL causes every Python call to run a single thread at a time.  ie: no threads in parallel
 
@@ -200,7 +200,7 @@ Easier multithreading... from C?!
 OpenMP: Shared memory multithreading C API/spec
 
 .. image:: Fork_join.svg
-    :width: 80%
+    :width: 100%
 
 source: https://en.wikipedia.org/wiki/OpenMP
 
@@ -229,31 +229,31 @@ Starting state
 --------------
 
 .. image:: output_array_0.png
-    :width: 40%
+    :width: 60%
 
 10 iterations
 -------------
 
 .. image:: output_array_1.png
-    :width: 40%
+    :width: 60%
 
 100 iterations
 --------------
 
 .. image:: output_array_2.png
-    :width: 40%
+    :width: 60%
 
 1000 iterations
 ---------------
 
 .. image:: output_array_3.png
-    :width: 40%
+    :width: 60%
 
 10000 iterations
 ----------------
 
 .. image:: output_array_4.png
-    :width: 40%
+    :width: 60%
 
 Python version
 --------------
@@ -279,7 +279,7 @@ Python benchmark
 ----------------
 
 .. image:: results-0.svg
-    :width: 100%
+    :width: 65%
 
 Numpy version
 -------------
@@ -300,7 +300,7 @@ Numpy Benchmark
 ---------------
 
 .. image:: results-1.svg
-    :width: 100%
+    :width: 65%
 
 Numba version
 -------------
@@ -322,7 +322,7 @@ Numba benchmark
 ---------------
 
 .. image:: results-2.svg
-    :width: 100%
+    :width: 65%
 
 
 Cython version
@@ -365,7 +365,7 @@ Cython benchmark
 ----------------
 
 .. image:: results-3.svg
-    :width: 100%
+    :width: 65%
 
 Cython C wrapper
 ----------------
@@ -424,7 +424,7 @@ Cython C wrapper benchmark
 --------------------------
 
 .. image:: results-4.svg
-    :width: 100%
+    :width: 65%
 
 Cython parallelism
 ------------------
@@ -463,11 +463,12 @@ Cython parallel benchmark
 -------------------------
 
 .. image:: results-5.svg
-    :width: 100%
+    :width: 65%
 
 Need more performance?
 ----------------------
 
+* Compiler flags (-O3...)
 * PyCuda/PyOpenCl
 * NumbaPro
 * OpenMP 4, OpenACC

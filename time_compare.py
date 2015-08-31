@@ -76,37 +76,34 @@ def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
 
 def plot_results(results, xmin, xmax, ymin, ymax):
     matplotlib.rcParams.update({'font.size': 18})
-    plt.figure(figsize=(11,5), tight_layout=True)
+    plt.figure(figsize=(8,11), tight_layout=True)
     plt.title('2D Laplace Python implementation benchmark')
     for idx, result in enumerate(results):
         name = result['name']
         array_shapes = result['array_shapes']
         times = result['times']
 
-        plt.subplot(1, 2, 1)
+        plt.subplot(2, 1, 1)
         plt.xlabel('array size (X*Y)')
         plt.ylabel('time per iteration (s)')
         plt.xlim(0, xmax)
         plt.ylim(0, ymax)
         plt.plot(array_shapes, times, '.-', linewidth=2.0, label=name)
-        #plt.legend(loc=2, bbox_to_anchor=(0.05, 1), framealpha=0.0)
+        legend = plt.legend(loc='upper right', bbox_to_anchor=(1.65, 1.0), framealpha=0.0)
 
-        plt.subplot(1, 2, 2)
+        plt.subplot(2, 1, 2)
         plt.xlim(xmin, xmax)
         plt.ylim(ymin, ymax)
         plt.xlabel('array size (X*Y)')
         plt.ylabel('time per iteration (s)')
         plt.loglog(array_shapes, times, '.-', linewidth=2.0, label=name)
-        #plt.legend(loc=2, bbox_to_anchor=(0.05, 1), framealpha=0.0)
-        legend = plt.legend(loc='upper right', bbox_to_anchor=(2.0, 1.0), framealpha=0.0)
 
-        #plt.savefig('slides/results-%d.png' % idx, transparent=True)
         plt.savefig('slides/results-%d.svg' % idx,
                     bbox_extra_artists=(legend,),
                     bbox_inches='tight',
                     transparent=True)
 
-    plt.show()
+    #plt.show()
 
 
 def main():

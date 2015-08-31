@@ -61,15 +61,13 @@ class TestLaplaceImplementations(unittest.TestCase):
 
     def testCython(self):
         import cy_laplace
-        self.runComparison(cy_laplace.cy_update)
+        cy_laplace.cy_run(self.u, self.dx2, self.dy2, self.niter)
+        np.testing.assert_almost_equal(self.u, self.reference_array, decimal=1)
 
     def testCythonCWrap(self):
         import cy_wrap_claplace
-        self.runComparison(cy_wrap_claplace.cy_update_c_wrap)
-
-    def testCythonParallel(self):
-        import cy_laplace
-        self.runComparison(cy_laplace.cy_update_parallel)
+        cy_wrap_claplace.cy_run_c_wrap(self.u, self.dx2, self.dy2, self.niter)
+        np.testing.assert_almost_equal(self.u, self.reference_array, decimal=1)
 
     def testNumbaLooped(self):
         import numba_laplace # requires numba, easiest to use Anaconda distribution
