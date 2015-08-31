@@ -32,11 +32,12 @@ from https://docs.python.org/2/c-api/intro.html:
 .. code-block:: python
 
     def incr_item(dict, key):
-        try:
-            item = dict[key]
-        except KeyError:
-            item = 0
-        dict[key] = item + 1
+      try:
+        item = dict[key]
+      except KeyError:
+        item = 0
+
+      dict[key] = item + 1
 
 Python C-API Demo
 -----------------
@@ -59,14 +60,14 @@ Python C-API Demo
             if (!PyErr_ExceptionMatches(PyExc_KeyError))
                 goto error;
 
+.. code-block:: c
+
             /* Clear the error and use zero: */
             PyErr_Clear();
             item = PyInt_FromLong(0L);
             if (item == NULL)
                 goto error;
         }
-
-.. code-block:: c
 
         const_one = PyInt_FromLong(1L);
         if (const_one == NULL)
@@ -80,6 +81,8 @@ Python C-API Demo
             goto error;
         rv = 0; /* Success */
         /* Continue with cleanup code */
+
+.. code-block:: c
 
     error:
         /* Cleanup code, shared by success and failure path */
@@ -120,9 +123,9 @@ Python demo counter
 .. code-block:: python
 
     def counter(count):
-        x = 0
-        for i in xrange(count):  # range in Py3
-            x += i
+      x = 0
+      for i in xrange(count):  # range in Py3
+        x += i
 
 Cython demo counter
 -------------------
@@ -130,9 +133,9 @@ Cython demo counter
 .. code-block:: cython
 
     def counter(count):
-        cdef int x = 0 # <- a C style data type
-        for i in xrange(count):
-            x += i
+      cdef int x = 0 # <- a C style data type
+      for i in xrange(count):
+        x += i
 
 Cython cdef-ed demo counter
 ---------------------------
@@ -140,10 +143,10 @@ Cython cdef-ed demo counter
 .. code-block:: cython
 
     cdef int counter(int count):
-        cdef int x = 0
-        for i in xrange(count):
-            x += i
-        return x
+      cdef int x = 0
+      for i in xrange(count):
+        x += i
+      return x
 
 Building a Cython module
 ------------------------
@@ -178,12 +181,12 @@ Cython nogil
 .. code-block:: cython
 
     def cython_func():
-        with nogil:
-            do_something()
+      with nogil:
+        do_something()
 
-            if something_bad == True:
-                with gil:
-                    raise RuntimeError('sorry...')
+        if something_bad == True:
+          with gil:
+            raise RuntimeError('sorry...')
 
 Threading headaches:
 --------------------
@@ -261,17 +264,18 @@ Python version
 .. code-block:: python
 
     def py_update(u, dx2, dy2):
-        nx, ny = u.shape
-        for i in xrange(1,nx-1):
-            for j in xrange(1, ny-1):
-                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
-                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+      nx, ny = u.shape
+      for i in xrange(1,nx-1):
+        for j in xrange(1, ny-1):
+          u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                    (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
 
-    work_array = np.zeros([array_shape, array_shape], dtype=np.float64)
+    work_array = np.zeros([array_shape, array_shape],
+                          dtype=np.float64)
     work_array[0] = 1.0
 
     for x in range(100):
-        py_update(work_array, dx2, dy2)
+      py_update(work_array, dx2, dy2)
 
 .. note: mention that previous computations introduce artifacts but discussed by Prahbu, approach zero
 
@@ -293,8 +297,8 @@ Numpy version
     import numpy as np
 
     def num_update(u, dx2, dy2):
-        u[1:-1,1:-1] = ((u[2:,1:-1] + u[:-2,1:-1])*dy2 +
-                        (u[1:-1,2:] + u[1:-1,:-2])*dx2) / (2*(dx2+dy2))
+      u[1:-1,1:-1] = ((u[2:,1:-1] + u[:-2,1:-1])*dy2 +
+                      (u[1:-1,2:] + u[1:-1,:-2])*dx2)/(2*(dx2+dy2))
 
 Numpy Benchmark
 ---------------
@@ -313,10 +317,10 @@ Numba version
 
     @jit
     def numba_update(u, dx2, dy2):
-        for i in xrange(1,u.shape[0]-1):
-            for j in xrange(1, u.shape[1]-1):
-                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
-                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+      for i in xrange(1,u.shape[0]-1):
+        for j in xrange(1, u.shape[1]-1):
+          u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                    (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
 
 Numba benchmark
 ---------------
@@ -338,12 +342,14 @@ Cython version
 
     @cython.boundscheck(False)
     @cython.wraparound(False)
-    def cy_update(np.ndarray[double, ndim=2] u, double dx2, double dy2):
-        cdef int i, j
-        for i in xrange(1,u.shape[0]-1):
-            for j in xrange(1, u.shape[1]-1):
-                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
-                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+    def cy_update(np.ndarray[double, ndim=2] u, 
+                  double dx2,
+                  double dy2):
+      cdef int i, j
+      for i in xrange(1,u.shape[0]-1):
+        for j in xrange(1, u.shape[1]-1):
+          u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                    (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
 
 Cython version: setup.py
 ------------------------
@@ -378,11 +384,11 @@ Cython C wrapper
     cimport numpy as np
 
     cdef extern from "claplace.h":
-        void c_update(double *u, int x_len, int y_len,
-                      double dx2, double dy2)
+      void c_update(double *u, int x_len, int y_len,
+                    double dx2, double dy2)
 
     def cy_update_c_wrap(np.ndarray[double, ndim=2] u, dx2, dy2):
-        c_update(<double *> &u[0,0], u.shape[0], u.shape[1], dx2, dy2)
+      c_update(<double *> &u[0,0], u.shape[0], u.shape[1], dx2, dy2)
 
 C implementation
 ----------------
@@ -391,13 +397,17 @@ C code in a Python talk?!
 
 .. code-block:: c
 
-    void c_update(double *u, int nx, int ny, double dx2, double dy2) {
-        int i, j, elem;
-        for (i=1; i<ny-1; i++) {
-            for (j=1; j<nx-1; j++) {
-                elem = i*nx + j;
-                u[elem] = ((u[elem+nx] + u[elem-nx]) * dy2 +
-                           (u[elem+1] + u[elem-1]) * dx2) / (2*(dx2+dy2));
+    void c_update(double *u,
+                  int nx,
+                  int ny,
+                  double dx2,
+                  double dy2) {
+      int i, j, idx;
+      for (i=1; i<ny-1; i++) {
+        for (j=1; j<nx-1; j++) {
+          idx = i*nx + j;
+          u[idx] = ((u[idx+nx] + u[idx-nx]) * dy2 +
+                    (u[idx+1] + u[idx-1]) * dx2) / (2*(dx2+dy2));
             }
         }
     }
@@ -412,7 +422,8 @@ Cython C wrapper: setup.py
     from Cython.Build import cythonize
 
     extensions = [Extension('cy_wrap_claplace',
-                            ['cy_wrap_claplace.pyx', 'claplace.c'],
+                            ['cy_wrap_claplace.pyx',
+                             'claplace.c'],
                             #extra_compile_args=['-fopenmp'],
                             #extra_link_args=['-fopenmp']
                             )
@@ -453,11 +464,11 @@ Cython parallel version
     def cy_update_parallel(np.ndarray[double, ndim=2] u, 
                            double dx2,
                            double dy2):
-        cdef int i, j
-        for i in prange(1, u.shape[0]-1, nogil=True):
-            for j in xrange(1, u.shape[1]-1):
-                u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
-                          (u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
+      cdef int i, j
+      for i in prange(1, u.shape[0]-1, nogil=True):
+        for j in xrange(1, u.shape[1]-1):
+          u[i,j] = ((u[i+1, j] + u[i-1, j]) * dy2 +
+                     u[i, j+1] + u[i, j-1]) * dx2) / (2*(dx2+dy2))
 
 Cython parallel benchmark
 -------------------------
@@ -468,7 +479,7 @@ Cython parallel benchmark
 Need more performance?
 ----------------------
 
-* Compiler flags (-O3...)
+* Compiler flags (-O3, -ffast-math, ...)
 * PyCuda/PyOpenCl
 * NumbaPro
 * OpenMP 4, OpenACC
@@ -499,11 +510,11 @@ Arbitrary scores:
 +--------------+--------+-------+--------+---------+-------+
 
 Thanks!
-----------
+-------
 
-http://cython.org
-http://numba.pydata.org/
-https://github.com/crleblanc/cython_talk_2105
+* http://cython.org
+* http://numba.pydata.org
+* https://github.com/crleblanc/cython_talk_2105
 
 Questions?
 ==========

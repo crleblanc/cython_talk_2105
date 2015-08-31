@@ -75,7 +75,7 @@ def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
 
 
 def plot_results(results, xmin, xmax, ymin, ymax):
-    matplotlib.rcParams.update({'font.size': 18})
+    matplotlib.rcParams.update({'font.size': 22})
     plt.figure(figsize=(8,11), tight_layout=True)
     plt.title('2D Laplace Python implementation benchmark')
     for idx, result in enumerate(results):
@@ -89,7 +89,7 @@ def plot_results(results, xmin, xmax, ymin, ymax):
         plt.xlim(0, xmax)
         plt.ylim(0, ymax)
         plt.plot(array_shapes, times, '.-', linewidth=2.0, label=name)
-        legend = plt.legend(loc='upper right', bbox_to_anchor=(1.65, 1.0), framealpha=0.0)
+        legend = plt.legend(loc='upper right', bbox_to_anchor=(1.9, 1.0), framealpha=0.0)
 
         plt.subplot(2, 1, 2)
         plt.xlim(xmin, xmax)
@@ -127,7 +127,7 @@ def main():
             with open('results.json', 'r') as fp:
                 results = json.load(fp)
 
-        plot_results(results, array_shapes[0]**2, array_shapes[-1]**2, 10e-7, ymax)
+        plot_results(results, array_shapes[0]**2, array_shapes[-1]**2, 10e-8, ymax)
 
 
 if __name__ == '__main__':
