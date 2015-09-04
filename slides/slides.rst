@@ -285,6 +285,12 @@ Python benchmark
 .. image:: results-0.svg
     :width: 65%
 
+PyPy benchmark
+----------------
+
+.. image:: results-1.svg
+    :width: 65%
+
 Numpy version
 -------------
 
@@ -303,7 +309,7 @@ Numpy version
 Numpy Benchmark
 ---------------
 
-.. image:: results-1.svg
+.. image:: results-2.svg
     :width: 65%
 
 Numba version
@@ -325,7 +331,7 @@ Numba version
 Numba benchmark
 ---------------
 
-.. image:: results-2.svg
+.. image:: results-3.svg
     :width: 65%
 
 
@@ -370,7 +376,7 @@ Build module with a single command:
 Cython benchmark
 ----------------
 
-.. image:: results-3.svg
+.. image:: results-4.svg
     :width: 65%
 
 Cython C wrapper
@@ -434,7 +440,7 @@ Cython C wrapper: setup.py
 Cython C wrapper benchmark
 --------------------------
 
-.. image:: results-4.svg
+.. image:: results-5.svg
     :width: 65%
 
 Cython parallelism
@@ -473,7 +479,7 @@ Cython parallel version
 Cython parallel benchmark
 -------------------------
 
-.. image:: results-5.svg
+.. image:: results-6.svg
     :width: 65%
 
 Need more performance?

@@ -15,7 +15,8 @@ M0 758.88
 L898.12 758.88
 L898.12 0
 L0 0
-L0 758.88" style="fill:none;"/>
+z
+" style="fill:none;"/>
   </g>
   <g id="axes_1">
    <g id="patch_2">
@@ -24,7 +25,8 @@ M83.7916 310.605
 L515.543 310.605
 L515.543 7.2
 L83.7916 7.2
-L83.7916 310.605" style="fill:none;"/>
+z
+" style="fill:none;"/>
    </g>
    <g id="line2d_1">
     <path clip-path="url(#pbe3ba1bd27)" d="
@@ -62,28 +64,8 @@ z
      <use style="fill:#0000ff;stroke:#0000ff;stroke-width:0.5;" x="83.8995193643" xlink:href="#m76a7ce5b4a" y="303.947045706"/>
      <use style="fill:#0000ff;stroke:#0000ff;stroke-width:0.5;" x="84.223389957" xlink:href="#m76a7ce5b4a" y="282.701659583"/>
      <use style="fill:#0000ff;stroke:#0000ff;stroke-width:0.5;" x="85.5188723281" xlink:href="#m76a7ce5b4a" y="197.220193641"/>
-     <use style="fill:#0000ff;stroke:#0000ff;stroke-width:0.5;" x="88.4500718241" xlink:href="#m76a7ce5b4a" y="-1.0"/>
+     <use style="fill:#0000ff;stroke:#0000ff;stroke-width:0.5;" x="94.5872489255" xlink:href="#m76a7ce5b4a" y="-416.022053281"/>
     </g>
-   </g>
-   <g id="patch_3">
-    <path d="
-M83.7916 7.2
-L515.543 7.2" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;"/>
-   </g>
-   <g id="patch_4">
-    <path d="
-M515.543 310.605
-L515.543 7.2" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;"/>
-   </g>
-   <g id="patch_5">
-    <path d="
-M83.7916 310.605
-L515.543 310.605" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;"/>
-   </g>
-   <g id="patch_6">
-    <path d="
-M83.7916 310.605
-L83.7916 7.2" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
@@ -927,6 +909,26 @@ Q48.6875 17.3906 48.6875 27.2969" id="DejaVuSans-70"/>
      </g>
     </g>
    </g>
+   <g id="patch_3">
+    <path d="
+M83.7916 7.2
+L515.543 7.2" style="fill:none;stroke:#000000;"/>
+   </g>
+   <g id="patch_4">
+    <path d="
+M515.543 310.605
+L515.543 7.2" style="fill:none;stroke:#000000;"/>
+   </g>
+   <g id="patch_5">
+    <path d="
+M83.7916 310.605
+L515.543 310.605" style="fill:none;stroke:#000000;"/>
+   </g>
+   <g id="patch_6">
+    <path d="
+M83.7916 310.605
+L83.7916 7.2" style="fill:none;stroke:#000000;"/>
+   </g>
    <g id="legend_1">
     <g id="patch_7">
      <path d="
@@ -934,7 +936,9 @@ M639.53 67.0702
 L890.92 67.0702
 L890.92 20.4
 L639.53 20.4
-L639.53 67.0702" style="fill:none;opacity:0.0;"/>
+L639.53 67.0702
+z
+" style="fill:none;opacity:0.0;"/>
     </g>
     <g id="line2d_26">
      <path d="
@@ -1034,7 +1038,8 @@ M83.7916 696.748
 L515.543 696.748
 L515.543 393.343
 L83.7916 393.343
-L83.7916 696.748" style="fill:none;"/>
+z
+" style="fill:none;"/>
    </g>
    <g id="line2d_28">
     <path clip-path="url(#p3fc156e64d)" d="
@@ -1060,26 +1065,6 @@ L377.209 374.484" style="fill:none;stroke:#0000ff;stroke-linecap:square;stroke-w
      <use style="fill:#0000ff;stroke:#0000ff;stroke-width:0.5;" x="308.483717443" xlink:href="#m76a7ce5b4a" y="414.597938122"/>
      <use style="fill:#0000ff;stroke:#0000ff;stroke-width:0.5;" x="377.209264421" xlink:href="#m76a7ce5b4a" y="374.484339429"/>
     </g>
-   </g>
-   <g id="patch_9">
-    <path d="
-M83.7916 393.343
-L515.543 393.343" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;"/>
-   </g>
-   <g id="patch_10">
-    <path d="
-M515.543 696.748
-L515.543 393.343" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;"/>
-   </g>
-   <g id="patch_11">
-    <path d="
-M83.7916 696.748
-L515.543 696.748" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;"/>
-   </g>
-   <g id="patch_12">
-    <path d="
-M83.7916 696.748
-L83.7916 393.343" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;"/>
    </g>
    <g id="matplotlib.axis_3">
     <g id="xtick_7">
@@ -2534,6 +2519,26 @@ L-2 0" id="ma4f294b3af" style="stroke:#000000;stroke-width:0.5;"/>
       <use x="1000.9765625" xlink:href="#DejaVuSans-29"/>
      </g>
     </g>
+   </g>
+   <g id="patch_9">
+    <path d="
+M83.7916 393.343
+L515.543 393.343" style="fill:none;stroke:#000000;"/>
+   </g>
+   <g id="patch_10">
+    <path d="
+M515.543 696.748
+L515.543 393.343" style="fill:none;stroke:#000000;"/>
+   </g>
+   <g id="patch_11">
+    <path d="
+M83.7916 696.748
+L515.543 696.748" style="fill:none;stroke:#000000;"/>
+   </g>
+   <g id="patch_12">
+    <path d="
+M83.7916 696.748
+L83.7916 393.343" style="fill:none;stroke:#000000;"/>
    </g>
   </g>
  </g>

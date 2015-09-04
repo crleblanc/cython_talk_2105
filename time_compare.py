@@ -11,21 +11,8 @@ import py_laplace
 import np_laplace
 import cy_laplace
 import cy_wrap_claplace
-import numba_laplace # requires numba, easiest to use Anaconda distribution
-
-laplace_funcs = (('Pure Python', py_laplace.py_run),
-                 ('NumPy', np_laplace.np_run),
-                 ('Numba', numba_laplace.numba_run),
-                 ('Cython', cy_laplace.cy_run),
-                 ('Cython C wrapper', cy_wrap_claplace.cy_run_c_wrap),
-                 ('Cython parallel', cy_laplace.cy_run_parallel),
-                 # ('Numba laplace vectorized', numba_laplace.numba_run_vectorized),
-                )
-
-dx = 0.1
-dy = 0.1
-dx2 = dx*dx
-dy2 = dy*dy
+#import numba_laplace # requires numba, easiest to use Anaconda distribution
+from run_comparison import run_all
 
 def getargs():
     parser = argparse.ArgumentParser(description='Time and/or plot the timings of the Laplace benchmarks')
@@ -37,47 +24,15 @@ def getargs():
     return parser.parse_args()
 
 
-def run_all(array_shapes, niter=10, maxtime=25, plot_data=False):
-    results = []
-    for name, laplace_func in laplace_funcs:
-
-        time_diff = 0
-        times = []
-        shapes = []
-        for array_shape in array_shapes:
-            if time_diff > maxtime:
-                continue
-
-            work_array = np.zeros([array_shape, array_shape], dtype=np.float64)
-            work_array[0] = 1.0
-
-            #t1 = time.time()
-            #for x in xrange(niter):
-                #laplace_func(work_array, dx2, dy2)
-            #t2 = time.time()
-            t1 = time.time()
-            laplace_func(work_array, dx2, dy2, niter)
-            t2 = time.time()
-
-            time_diff = (t2-t1)/niter
-            times.append(time_diff)
-            shapes.append(work_array.size)
-            print(name, array_shape, time_diff)
-
-            if plot_data:
-                plt.imshow(work_array)
-                plt.show()
-
-        results.append({'name':name, 'array_shapes':shapes, 'times':times})
-        print(name, shapes, times)
-
-    return results
-
-
-def plot_results(results, xmin, xmax, ymin, ymax):
+def plot_results(results_list, xmin, xmax, ymin, ymax):
     matplotlib.rcParams.update({'font.size': 22})
     plt.figure(figsize=(8,11), tight_layout=True)
     plt.title('2D Laplace Python implementation benchmark')
+    
+    results, pypy_results = results_list
+    # place Pypy result as the second graph.  Results run from 'run_pypy_laplce.py' using pypy/numpypy.
+    results.insert(1, pypy_results)
+    
     for idx, result in enumerate(results):
         name = result['name']
         array_shapes = result['array_shapes']
@@ -107,17 +62,26 @@ def plot_results(results, xmin, xmax, ymin, ymax):
 
 
 def main():
-    niter=100
     # don't make it bigger than 20000, that's a massive array!
     #array_shapes = [10, 20, 50, 100, 200, 500, 1000, 3000, 5000, 10000, 15000, 20000]
     array_shapes = [10, 12, 15, 18, 20, 35, 50, 100, 200, 500, 800, 1000, 1500, 2000, 3162]
     ymax = array_shapes[-1]/25000.0
 
     results = None
+    pypy_results = None
     args = getargs()
+    
+    laplace_funcs = (('Pure Python (Cpython)', py_laplace.py_run),
+                    ('NumPy', np_laplace.np_run),
+                    #('Numba', numba_laplace.numba_run),
+                    ('Cython', cy_laplace.cy_run),
+                    ('Cython C wrapper', cy_wrap_claplace.cy_run_c_wrap),
+                    ('Cython parallel', cy_laplace.cy_run_parallel),
+                    # ('Numba laplace vectorized', numba_laplace.numba_run_vectorized),
+                    )
 
     if args.timing:
-        results = run_all(array_shapes, niter=niter, maxtime=ymax, plot_data=False)
+        results = run_all(laplace_funcs, array_shapes, maxtime=ymax)
         
         with open('results.json', 'w') as fp:
             json.dump(results, fp)
@@ -126,8 +90,11 @@ def main():
         if results is None:
             with open('results.json', 'r') as fp:
                 results = json.load(fp)
+            
+            with open('pypy_results.json', 'r') as pypy_fp:
+                pypy_results = json.load(pypy_fp)
 
-        plot_results(results, array_shapes[0]**2, array_shapes[-1]**2, 10e-8, ymax)
+        plot_results([results, pypy_results], array_shapes[0]**2, array_shapes[-1]**2, 10e-8, ymax)
 
 
 if __name__ == '__main__':
