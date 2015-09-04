@@ -11,7 +11,7 @@ import py_laplace
 import np_laplace
 import cy_laplace
 import cy_wrap_claplace
-#import numba_laplace # requires numba, easiest to use Anaconda distribution
+import numba_laplace # requires numba, easiest to use Anaconda distribution
 from run_comparison import run_all
 
 def getargs():
@@ -73,7 +73,7 @@ def main():
     
     laplace_funcs = (('Pure Python (Cpython)', py_laplace.py_run),
                     ('NumPy', np_laplace.np_run),
-                    #('Numba', numba_laplace.numba_run),
+                    ('Numba', numba_laplace.numba_run),
                     ('Cython', cy_laplace.cy_run),
                     ('Cython C wrapper', cy_wrap_claplace.cy_run_c_wrap),
                     ('Cython parallel', cy_laplace.cy_run_parallel),
