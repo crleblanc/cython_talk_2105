@@ -11,6 +11,9 @@ Myself
 * Using Python since 2001
 * Software developer for GLOBE Claritas, GNS Science
 
+.. image:: biking.jpg
+    :width: 60%
+
 .. Me: OBSs and seismics in Canada before coming to NZ to work on Claritas.
 
 What is Cython
@@ -217,7 +220,7 @@ Classic Demo Updated
 * Previously compared:
     Psyco, NumPy, Blitz, Inline, Python/Fortran, Pyrex, MatLab, Octave, Pure C++
 * We'll disucss:
-    Python, NumPy, Numba, Cython, Cython wrapping C, Cython in parallel
+    Python, Pypy, NumPy, Numba, Cython, Cython wrapping C, Cython in parallel
 
 2D Laplace equation
 -------------------
